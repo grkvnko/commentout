@@ -1,0 +1,12 @@
+Options -Indexes
+ErrorDocument 404 /
+ErrorDocument 403 /
+RewriteEngine On
+
+RewriteBase /
+
+#RewriteCond %{HTTP:X-Forwarded-Protocol} !=http
+#RewriteRule .* http://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+
+RewriteCond %{REQUEST_URI} !(^(.*\.png|.*\.jpg|.*\.css|.*\.js|.*\.ico|.*\.svg|.*\.txt)$) [NC]
+RewriteRule . index.php [NC,L]
