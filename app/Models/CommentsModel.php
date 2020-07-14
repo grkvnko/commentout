@@ -13,6 +13,17 @@ class CommentsModel extends Model
      */
     const CommentsPerPage = 6;
 
+    /*
+     * Обработка сохраняемых данных
+     */
+    private function escape_string($text)
+    {
+        $text = trim($text);
+        $text = htmlspecialchars($text);
+        $text = mysqli_real_escape_string($this->db->getDbInstatce(), $text);
+        return $text;
+    }
+
     /**
      * Получает общее количество комментариев в базе
      *
@@ -46,7 +57,7 @@ class CommentsModel extends Model
     public function getCommentsByPage($pageNum)
     {
         $commentsPerPage = self::CommentsPerPage;
-        $startPost =  $commentsPerPage * $pageNum - $commentsPerPage;
+        $startPost =  (int)($commentsPerPage * $pageNum - $commentsPerPage);
 
         $query = "SELECT name, email, date, title, comment
             FROM comments  
@@ -69,6 +80,9 @@ class CommentsModel extends Model
      */
     public function saveComment(array $commentData)
     {
+        /* обработка сохраняемых данных */
+        $commentData = array_map(array($this, 'escape_string'), $commentData);
+
         /* подготовка запроса для вставки данных в mysql */
         $commentData['comment'] = mysqli_real_escape_string($this->db->getDbInstatce(), $commentData['comment']);
         $values = '(\''.implode('\',\'',array_values($commentData))."')";
@@ -78,6 +92,7 @@ class CommentsModel extends Model
             return 'nn';
 
         $query = "INSERT INTO comments $keys VALUES $values";
+        //echo $query . PHP_EOL;
         if ($this->db->query($query)) {
             return 'ok';
         }

@@ -8,14 +8,6 @@ namespace Commentout\Controllers;
  */
 class CommentsController extends Controller
 {
-    private function trim($text)
-    {
-        $text = trim($text);
-        $text = stripslashes($text);
-        $text = htmlspecialchars($text);
-        return $text;
-    }
-
     /*
      * Метод для получения страницы с комментариями в формате JSON
      */
@@ -58,10 +50,10 @@ class CommentsController extends Controller
 
         print_r($comments->saveComment(
             [
-                'title' => $this->trim($_POST["title"]),
-                'comment' => $this->trim($_POST["comment"]),
-                'name' => $this->trim($_POST["name"]),
-                'email' => $this->trim($_POST["email"]),
+                'title' => $_POST["title"],
+                'comment' => $_POST["comment"],
+                'name' => $_POST["name"],
+                'email' => $_POST["email"],
                 'date' => date('Y-m-d H:i:s')
             ]
         ));
